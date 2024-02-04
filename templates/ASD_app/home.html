@@ -1,3 +1,4 @@
+{%load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,21 +10,45 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <title>ASD</title>
+
+    <style>
+      .container-fluid {
+        position: relative;
+        text-align: center;
+        color: white;
+        height: 100vh;
+      }
+           
+      .centered {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      </style>
+    
   </head>
   <body>
-    <h1>Autism Prediction System</h1>
 
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="upload" accept=".jpg, .jpeg, .png, .jfif">
-        <input type="submit" value="submit">
-    </form>
+    <div class="container-fluid">
+      <img src="{% static "images/1.jpg" %}" alt="ASD" height="100%" width="100%">
 
-    <br>
-    <br>
-    <p>{{  }}</p>
-    <p>{{  }}</p>
+      <div class="centered">
+          <h1>Autism Prediction System</h1>
+          <h4>Upload an Eye Tracking Image</h4>
+          <h6>Supported format jpg, jpeg, png</h6>
+          <form method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="file" name="upload" accept=".jpg, .jpeg, .png" required/>
+              <input type="submit" value="Predict"/>
+          </form>
+      
+          <br>
+          <h3 class="text-info fw-bold">{{ pred }}</h3>
+
+      </div>
+    </div>
 
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
