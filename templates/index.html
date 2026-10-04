@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepASD Clinical Diagnostics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Premium Light Theme Colors */
+            --primary: #2563eb;         /* Refined royal blue */
+            --primary-light: #eff6ff;   /* Very soft blue tint */
+            --primary-hover: #1d4ed8;
+            --bg-page: #f4f7f9;         /* Extremely soft clinical gray-blue background */
+            --bg-card: #ffffff;
+            --text-heading: #111827;    /* Deep gray for sharp contrast */
+            --text-body: #4b5563;
+            --text-muted: #9ca3af;
+            --border-light: #e5e7eb;
+            --input-bg: #f9fafb;
+            --success: #059669;
+            --success-light: #ecfdf5;
+            --danger: #dc2626;
+            --danger-light: #fef2f2;
+            
+            /* High-end soft shadows */
+            --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+            --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.05), 0 4px 6px rgba(0, 0, 0, 0.03);
+            --shadow-btn: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            background-color: var(--bg-card);
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3rem;
+            border-bottom: 1px solid var(--border-light);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary);
+        }
+
+        .brand h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            letter-spacing: -0.01em;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-body);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px var(--success-light);
+        }
+
+        /* Main Workspace */
+        .workspace {
+            flex: 1;
+            padding: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: stretch;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-card);
+            border-radius: 1.25rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(229, 231, 235, 0.5);
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            padding: 2rem 2.5rem 1.5rem 2.5rem;
+            border-bottom: 1px solid var(--border-light);
+            background: #fafafa;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .card-body {
+            padding: 2.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-heading);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            font-size: 0.95rem;
+            color: var(--text-heading);
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .demographics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            background: var(--input-bg);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-light);
+            margin-bottom: 1.75rem;
+        }
+        
+        .demographics-grid .form-group {
+            margin-bottom: 0;
+        }
+
+        /* File Upload */
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.75rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            background-color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .upload-area:hover, .upload-area.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .upload-area input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .upload-area:hover .upload-icon, .upload-area.active .upload-icon {
+            color: var(--primary);
+        }
+
+        .upload-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-heading);
+            margin-bottom: 0.35rem;
+        }
+
+        .upload-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .file-display {
+            display: none;
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: var(--success-light);
+            border: 1px solid #a7f3d0;
+            border-radius: 0.5rem;
+            color: var(--success);
+            font-size: 0.875rem;
+            font-weight: 500;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Button */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: auto;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: var(--shadow-btn);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.25);
+        }
+
+        /* Results Card */
+        .results-card .card-body {
+            position: relative;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 4rem;
+            height: 4rem;
+            color: #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.125rem;
+            color: var(--text-heading);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .empty-state p {
+            font-size: 0.875rem;
+            max-width: 250px;
+            line-height: 1.5;
+        }
+
+        /* Report UI */
+        .report-ui {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .report-header {
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+            border: 1px solid transparent;
+        }
+
+        .report-header.asd {
+            background-color: var(--danger-light);
+            border-color: #fca5a5;
+            color: var(--danger);
+        }
+
+        .report-header.td {
+            background-color: var(--success-light);
+            border-color: #6ee7b7;
+            color: var(--success);
+        }
+
+        .report-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .report-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .report-subtitle {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .metric-group {
+            margin-bottom: 2rem;
+        }
+
+        .metric-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 0.75rem;
+        }
+        
+        .metric-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-heading);
+            line-height: 1;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: var(--border-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .report-header.asd ~ .metric-group .progress-fill { background-color: var(--danger); }
+        .report-header.td ~ .metric-group .progress-fill { background-color: var(--success); }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: auto;
+        }
+
+        .details-table tr {
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .details-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .details-table td {
+            padding: 1rem 0;
+            font-size: 0.875rem;
+        }
+
+        .details-table td:first-child {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .details-table td:last-child {
+            color: var(--text-heading);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-body);
+            box-shadow: none;
+            margin-top: 2rem;
+        }
+
+        .btn-outline:hover {
+            background: var(--input-bg);
+            border-color: #d1d5db;
+        }
+
+        /* Loading Overlay */
+        .loading-pane {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 10;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .workspace {
+                grid-template-columns: 1fr;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="brand">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+            <h1>DeepASD Diagnostics</h1>
+        </div>
+        <div class="nav-right">
+            <button id="historyBtn" style="background:none; border:none; color:var(--text-body); font-weight:500; font-size:0.875rem; cursor:pointer;">
+                Clinical Records
+            </button>
+            <div class="system-status">
+                <div class="status-dot"></div>
+                System Online
+            </div>
+        </div>
+    </nav>
+
+    <main class="workspace">
+        
+        <!-- Left Panel: Data Entry -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Patient Analysis Entry
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <form id="predictionForm">
+                    <div class="form-group">
+                        <label class="form-label" for="model">Analysis Architecture</label>
+                        <select id="model" name="model" class="form-control" onchange="toggleDemographics()">
+                            <option value="multimodal_tta">Proposed Multimodal + TTA (Highest Accuracy)</option>
+                            <option value="trimodel_tta">Tri-Model TTA Ensemble</option>
+                            <option value="efficientnetb0">EfficientNetB0 (Scanpath Baseline)</option>
+                            <option value="vgg16">VGG16 (Legacy Baseline)</option>
+                        </select>
+                    </div>
+
+                    <div id="demographicsSection" class="demographics-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="age">Patient Age (Years)</label>
+                            <input type="number" id="age" name="age" class="form-control" min="1" max="100" step="1" placeholder="e.g., 5">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="gender">Biological Gender</label>
+                            <select id="gender" name="gender" class="form-control">
+                                <option value="1">Male</option>
+                                <option value="0">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="flex:1;">
+                        <label class="form-label">Eye-Tracking Scanpath Artifact</label>
+                        <div class="upload-area" id="uploadArea">
+                            <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                            </svg>
+                            <div class="upload-title">Click or drag image to upload</div>
+                            <div class="upload-subtitle">PNG, JPG (Max 16MB)</div>
+                            <input type="file" id="fileInput" name="file" accept="image/png, image/jpeg" required>
+                            
+                            <div class="file-display" id="fileDisplay">
+                                <svg style="width:1rem; height:1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span id="fileNameText">filename.png</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="predictBtn">
+                        Initiate Clinical Analysis
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Panel: Report -->
+        <div class="card results-card">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Diagnostic Report
+                </div>
+            </div>
+
+            <div class="card-body" style="position: relative;">
+                
+                <!-- Loading State -->
+                <div class="loading-pane" id="loadingPane">
+                    <div class="spinner"></div>
+                    <div style="font-weight: 500; color: var(--text-heading);">Processing Inference...</div>
+                    <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">Running Multimodal Aggregation</div>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    <h3>No Active Session</h3>
+                    <p>Upload a patient scanpath on the left to generate a diagnostic report.</p>
+                </div>
+
+                <!-- Report UI -->
+                <div class="report-ui" id="reportUi">
+                    
+                    <div class="report-header" id="reportHeader">
+                        <svg class="report-icon asd-icon" id="asdIcon" style="display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <svg class="report-icon td-icon" id="tdIcon" style="display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div>
+                            <h3 class="report-title" id="resultDiagnosis">Diagnosis</h3>
+                            <p class="report-subtitle" id="resultSubtext">Automated screening complete</p>
+                        </div>
+                    </div>
+
+                    <div class="metric-group">
+                        <div class="metric-label">
+                            <span class="metric-name">Probability Match Confidence</span>
+                            <span class="metric-value" id="resultConfidence">0.00%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" id="confidenceFill"></div>
+                        </div>
+                    </div>
+
+                    <table class="details-table">
+                        <tbody>
+                            <tr>
+                                <td>Applied Architecture</td>
+                                <td id="resultModel">Multimodal + TTA</td>
+                            </tr>
+                            <tr>
+                                <td>Processing ID</td>
+                                <td id="resultTimestamp">REQ-000000</td>
+                            </tr>
+                            <tr>
+                                <td>Clinical Disclaimer</td>
+                                <td style="font-size:0.75rem; color:var(--text-muted); font-weight:400; text-align:right; line-height:1.4;">
+                                    This automated analysis is intended as a supplementary screening tool. Final clinical diagnosis must be determined by a healthcare professional.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <button class="btn btn-outline" onclick="resetWorkspace()">Process Next Patient</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileDisplay = document.getElementById('fileDisplay');
+        const fileNameText = document.getElementById('fileNameText');
+        const form = document.getElementById('predictionForm');
+        
+        // File Drag & Drop logic
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('active'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('active'), false);
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            fileInput.files = e.dataTransfer.files;
+            updateFileName();
+        });
+
+        fileInput.addEventListener('change', updateFileName);
+
+        function updateFileName() {
+            if(fileInput.files.length > 0) {
+                fileNameText.textContent = fileInput.files[0].name;
+                fileDisplay.style.display = 'flex';
+                uploadArea.querySelector('.upload-icon').style.display = 'none';
+                uploadArea.querySelector('.upload-title').style.display = 'none';
+                uploadArea.querySelector('.upload-subtitle').style.display = 'none';
+                uploadArea.style.padding = '1.5rem 2rem';
+            }
+        }
+
+        // Demographics Toggle
+        function toggleDemographics() {
+            const modelSelect = document.getElementById('model').value;
+            const demoSection = document.getElementById('demographicsSection');
+            const ageInput = document.getElementById('age');
+            
+            if (modelSelect.includes('multimodal') || modelSelect.includes('trimodel')) {
+                demoSection.style.display = 'grid';
+                ageInput.required = true;
+            } else {
+                demoSection.style.display = 'none';
+                ageInput.required = false;
+            }
+        }
+        toggleDemographics();
+
+        function resetWorkspace() {
+            document.getElementById('reportUi').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'flex';
+            form.reset();
+            
+            // Reset upload area UI
+            fileDisplay.style.display = 'none';
+            uploadArea.querySelector('.upload-icon').style.display = 'block';
+            uploadArea.querySelector('.upload-title').style.display = 'block';
+            uploadArea.querySelector('.upload-subtitle').style.display = 'block';
+            uploadArea.style.padding = '3rem 2rem';
+            
+            toggleDemographics();
+            document.getElementById('confidenceFill').style.width = '0%';
+        }
+
+        // Submission Logic
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loadingPane = document.getElementById('loadingPane');
+            const reportUi = document.getElementById('reportUi');
+            const emptyState = document.getElementById('emptyState');
+
+            if (!fileInput.files.length) {
+                alert('Please upload a scanpath image.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            const selectedModel = document.getElementById('model').value;
+            formData.append('model', selectedModel);
+            
+            if (selectedModel.includes('multimodal') || selectedModel.includes('trimodel')) {
+                formData.append('age', document.getElementById('age').value);
+                formData.append('gender', document.getElementById('gender').value);
+            }
+
+            loadingPane.style.display = 'flex';
+
+            try {
+                // UX latency simulation for local dev
+                await new Promise(r => setTimeout(r, 600)); 
+
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Server processing exception');
+                }
+
+                emptyState.style.display = 'none';
+                reportUi.style.display = 'flex';
+
+                const isASD = data.diagnosis.includes('ASD') && !data.diagnosis.includes('Non-ASD');
+                
+                const header = document.getElementById('reportHeader');
+                header.className = 'report-header ' + (isASD ? 'asd' : 'td');
+                
+                document.getElementById('asdIcon').style.display = isASD ? 'block' : 'none';
+                document.getElementById('tdIcon').style.display = isASD ? 'none' : 'block';
+
+                document.getElementById('resultDiagnosis').textContent = data.diagnosis;
+                document.getElementById('resultSubtext').textContent = isASD ? 'Positive clinical indicator for ASD traits.' : 'Typical development traits identified.';
+                
+                document.getElementById('resultModel').textContent = data.model || selectedModel;
+                document.getElementById('resultConfidence').textContent = parseFloat(data.confidence).toFixed(2) + '%';
+                
+                const date = new Date();
+                document.getElementById('resultTimestamp').textContent = `REQ-${date.getTime().toString().slice(-6)}`;
+                
+                // Animate progress bar
+                setTimeout(() => {
+                    document.getElementById('confidenceFill').style.width = data.confidence + '%';
+                }, 50);
+
+            } catch (error) {
+                alert('Analysis Failed: ' + error.message);
+            } finally {
+                loadingPane.style.display = 'none';
+            }
+        });
+
+        // History
+        document.getElementById('historyBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/history');
+                const history = await response.json();
+                if(history.length === 0) {
+                    alert('No clinical history found.');
+                    return;
+                }
+                const latest = history[history.length - 1];
+                alert(`System Database contains ${history.length} records.\n\nLatest Scan:\nDiagnosis: ${latest.diagnosis}\nConfidence: ${latest.confidence}%\nModel: ${latest.model}`);
+            } catch (error) {
+                alert('Database connection unavailable.');
+            }
+        });
+    </script>
+</body>
+</html>
