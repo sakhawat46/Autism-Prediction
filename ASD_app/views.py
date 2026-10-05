@@ -1,10 +1,10 @@
 import os
+import cv2
+import numpy as np
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
-from PIL import Image
-import numpy as np
 import keras
 
 media = 'media'
@@ -19,48 +19,91 @@ except Exception as e:
 
 prediction_history = []
 
+# ==========================================
+# রিসার্চ পেপারের এক্স্যাক্ট প্রি-প্রসেসিং এবং ফিচার এক্সট্রাকশন
+# ==========================================
+def preprocess_sharpened(img_bgr, size=224):
+    kernel_dilate = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
+    dilated = cv2.dilate(img_bgr, kernel_dilate, iterations=1)
+    
+    SHARPEN_KERNEL = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+    sharpened = cv2.filter2D(dilated.astype(np.float32), -1, SHARPEN_KERNEL)
+    sharpened = np.clip(sharpened, 0, 255).astype(np.uint8)
+    
+    img_resized = cv2.resize(sharpened, (size, size), interpolation=cv2.INTER_AREA)
+    img_resized = cv2.filter2D(img_resized.astype(np.float32), -1, SHARPEN_KERNEL)
+    img_resized = np.clip(img_resized, 0, 255).astype(np.uint8)
+    
+    gray = cv2.cvtColor(img_resized, cv2.COLOR_BGR2GRAY)
+    img_resized[gray < 3] = 0
+    
+    img_rgb = cv2.cvtColor(img_resized, cv2.COLOR_BGR2RGB)
+    return img_rgb.astype(np.float32) / 255.0
+
+def compute_scanpath_density(img):
+    gray = np.mean(img, axis=-1)
+    return float(np.mean(gray > 0.05) * 100.0)
+
+# ==========================================
+# API Endpoint
+# ==========================================
 @csrf_exempt
 def predict_api(request):
     if request.method == 'POST':
         try:
             image_files = request.FILES.getlist('files')
-            
             if not image_files:
                 return JsonResponse({'error': 'No image files provided'}, status=400)
             
-            # Age এবং Gender রিসিভ করা (Multimodal এর জন্য বাধ্যতামূলক)
             age = request.POST.get('age')
             gender = request.POST.get('gender')
-            
             if not age or not gender:
                 return JsonResponse({'error': 'Age and Gender are required'}, status=400)
             
-            age = float(age)
-            gender = int(gender)
+            age_num = float(age)
+            gender_encoded = float(gender)
             
-            # ফাইল সেভ করা এবং প্রি-প্রসেসিং
             processed_images = []
+            meta_features = []
             fss = FileSystemStorage()
+            
+            age_mean = 8.2
+            age_std = 2.8
             
             for image_file in image_files:
                 file = fss.save(image_file.name, image_file)
                 file_path = os.path.join(media, file)
                 
-                img = Image.open(file_path)
-                img_d = img.resize((224, 224))
-                if len(np.array(img_d).shape) < 4:
-                    rgb_img = Image.new("RGB", img_d.size)
-                    rgb_img.paste(img_d)
-                else:
-                    rgb_img = img_d
+                # ইমেজ রিড করা
+                img_bgr = cv2.imread(file_path)
+                if img_bgr is None:
+                    continue
                 
-                rgb_img = np.array(rgb_img, dtype=np.float64)
-                processed_images.append(rgb_img)
+                # নোটবুকের মতো হুবহু শার্পেনিং এবং রিসাইজিং (224x224)
+                img_norm = preprocess_sharpened(img_bgr, size=224)
+                processed_images.append(img_norm)
+                
+                # ৬টি মেটাডেটা ফিচার ক্যালকুলেশন
+                age_norm_val = (age_num - age_mean) / (age_std + 1e-5)
+                dens = compute_scanpath_density(img_norm)
+                
+                gray_img = np.mean(img_norm, axis=-1)
+                h, w = gray_img.shape
+                center_crop = gray_img[h//4 : 3*h//4, w//4 : 3*w//4]
+                center_ratio = float(np.mean(center_crop > 0.05) / (np.mean(gray_img > 0.05) + 1e-5))
+                
+                ys, xs = np.where(gray_img > 0.05)
+                spatial_spread = float((np.std(ys)/h + np.std(xs)/w)) if len(ys) > 5 else 0.0
+                rg_diff = float(np.mean(img_norm[:, :, 0]) - np.mean(img_norm[:, :, 1])) * 10.0
+                
+                # ৬টি কলামের ডেমোগ্রাফিক্স অ্যারে
+                meta_features.append([age_norm_val, gender_encoded, dens / 5.0, center_ratio, spatial_spread, rg_diff])
             
-            batch_images = np.array(processed_images)
-            
-            # Shape error ফিক্স করার জন্য ৬টি ভ্যালুর অ্যারে তৈরি করা হলো
-            demographics = np.array([[age, gender, 0, 0, 0, 0]] * len(image_files), dtype=np.float64)
+            if len(processed_images) == 0:
+                return JsonResponse({'error': 'Failed to process images.'}, status=500)
+
+            batch_images = np.array(processed_images, dtype=np.float32)
+            demographics = np.array(meta_features, dtype=np.float32)
             
             # মডেল প্রেডিকশন এবং TTA Average
             if multimodal_model is not None:
