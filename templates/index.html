@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +11,16 @@
     <style>
         :root {
             /* Premium Light Theme Colors */
-            --primary: #2563eb;         /* Refined royal blue */
-            --primary-light: #eff6ff;   /* Very soft blue tint */
+            --primary: #2563eb;
+            /* Refined royal blue */
+            --primary-light: #eff6ff;
+            /* Very soft blue tint */
             --primary-hover: #1d4ed8;
-            --bg-page: #f4f7f9;         /* Extremely soft clinical gray-blue background */
+            --bg-page: #f4f7f9;
+            /* Extremely soft clinical gray-blue background */
             --bg-card: #ffffff;
-            --text-heading: #111827;    /* Deep gray for sharp contrast */
+            --text-heading: #111827;
+            /* Deep gray for sharp contrast */
             --text-body: #4b5563;
             --text-muted: #9ca3af;
             --border-light: #e5e7eb;
@@ -24,7 +29,7 @@
             --success-light: #ecfdf5;
             --danger: #dc2626;
             --danger-light: #fef2f2;
-            
+
             /* High-end soft shadows */
             --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
             --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.05), 0 4px 6px rgba(0, 0, 0, 0.03);
@@ -56,7 +61,7 @@
             justify-content: space-between;
             padding: 0 3rem;
             border-bottom: 1px solid var(--border-light);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -213,7 +218,7 @@
             border: 1px solid var(--border-light);
             margin-bottom: 1.75rem;
         }
-        
+
         .demographics-grid .form-group {
             margin-bottom: 0;
         }
@@ -230,7 +235,8 @@
             position: relative;
         }
 
-        .upload-area:hover, .upload-area.active {
+        .upload-area:hover,
+        .upload-area.active {
             border-color: var(--primary);
             background-color: var(--primary-light);
         }
@@ -239,7 +245,8 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            top: 0; left: 0;
+            top: 0;
+            left: 0;
             opacity: 0;
             cursor: pointer;
         }
@@ -252,7 +259,8 @@
             transition: color 0.2s ease;
         }
 
-        .upload-area:hover .upload-icon, .upload-area.active .upload-icon {
+        .upload-area:hover .upload-icon,
+        .upload-area.active .upload-icon {
             color: var(--primary);
         }
 
@@ -354,8 +362,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .report-header {
@@ -407,7 +422,7 @@
             align-items: flex-end;
             margin-bottom: 0.75rem;
         }
-        
+
         .metric-name {
             font-size: 0.75rem;
             font-weight: 700;
@@ -437,8 +452,13 @@
             transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .report-header.asd ~ .metric-group .progress-fill { background-color: var(--danger); }
-        .report-header.td ~ .metric-group .progress-fill { background-color: var(--success); }
+        .report-header.asd~.metric-group .progress-fill {
+            background-color: var(--danger);
+        }
+
+        .report-header.td~.metric-group .progress-fill {
+            background-color: var(--success);
+        }
 
         .details-table {
             width: 100%;
@@ -449,7 +469,7 @@
         .details-table tr {
             border-bottom: 1px solid var(--border-light);
         }
-        
+
         .details-table tr:last-child {
             border-bottom: none;
         }
@@ -487,7 +507,10 @@
         .loading-pane {
             display: none;
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(4px);
             z-index: 10;
@@ -507,7 +530,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         @media (max-width: 1024px) {
@@ -518,17 +543,21 @@
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar">
         <div class="brand">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                </path>
             </svg>
             <h1>DeepASD Diagnostics</h1>
         </div>
         <div class="nav-right">
-            <button id="historyBtn" style="background:none; border:none; color:var(--text-body); font-weight:500; font-size:0.875rem; cursor:pointer;">
+            <button id="historyBtn"
+                style="background:none; border:none; color:var(--text-body); font-weight:500; font-size:0.875rem; cursor:pointer;">
                 Clinical Records
             </button>
             <div class="system-status">
@@ -539,32 +568,30 @@
     </nav>
 
     <main class="workspace">
-        
+
         <!-- Left Panel: Data Entry -->
         <div class="card">
             <div class="card-header">
                 <div class="card-title">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
                     Patient Analysis Entry
                 </div>
             </div>
-            
+
             <div class="card-body">
                 <form id="predictionForm">
-                    <div class="form-group">
-                        <label class="form-label" for="model">Analysis Architecture</label>
-                        <select id="model" name="model" class="form-control" onchange="toggleDemographics()">
-                            <option value="multimodal_tta">Proposed Multimodal + TTA (Highest Accuracy)</option>
-                            <option value="trimodel_tta">Tri-Model TTA Ensemble</option>
-                            <option value="efficientnetb0">EfficientNetB0 (Scanpath Baseline)</option>
-                            <option value="vgg16">VGG16 (Legacy Baseline)</option>
-                        </select>
-                    </div>
+                    <!-- Permanently using Multimodal -->
+                    <input type="hidden" id="model" name="model" value="multimodal_tta">
 
-                    <div id="demographicsSection" class="demographics-grid">
+                    <div id="demographicsSection" class="demographics-grid" style="display: grid;">
                         <div class="form-group">
                             <label class="form-label" for="age">Patient Age (Years)</label>
-                            <input type="number" id="age" name="age" class="form-control" min="1" max="100" step="1" placeholder="e.g., 5">
+                            <input type="number" id="age" name="age" class="form-control" min="1" max="100" step="1"
+                                placeholder="e.g., 5">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="gender">Biological Gender</label>
@@ -576,17 +603,23 @@
                     </div>
 
                     <div class="form-group" style="flex:1;">
-                        <label class="form-label">Eye-Tracking Scanpath Artifact</label>
+                        <label class="form-label">Eye-Tracking Scanpath Artifact(s)</label>
                         <div class="upload-area" id="uploadArea">
                             <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                             </svg>
-                            <div class="upload-title">Click or drag image to upload</div>
-                            <div class="upload-subtitle">PNG, JPG (Max 16MB)</div>
-                            <input type="file" id="fileInput" name="file" accept="image/png, image/jpeg" required>
-                            
+                            <div class="upload-title">Click or drag images to upload</div>
+                            <div class="upload-subtitle">Select multiple images for TTA Voting (PNG, JPG)</div>
+                            <input type="file" id="fileInput" name="files" accept="image/png, image/jpeg" multiple
+                                required>
+
                             <div class="file-display" id="fileDisplay">
-                                <svg style="width:1rem; height:1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <svg style="width:1rem; height:1rem;" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
                                 <span id="fileNameText">filename.png</span>
                             </div>
                         </div>
@@ -603,33 +636,51 @@
         <div class="card results-card">
             <div class="card-header">
                 <div class="card-title">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                        </path>
+                    </svg>
                     Diagnostic Report
                 </div>
             </div>
 
             <div class="card-body" style="position: relative;">
-                
+
                 <!-- Loading State -->
                 <div class="loading-pane" id="loadingPane">
                     <div class="spinner"></div>
                     <div style="font-weight: 500; color: var(--text-heading);">Processing Inference...</div>
-                    <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">Running Multimodal Aggregation</div>
+                    <div style="font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem;">Running Multimodal
+                        Aggregation</div>
                 </div>
 
                 <!-- Empty State -->
                 <div class="empty-state" id="emptyState">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                        </path>
+                    </svg>
                     <h3>No Active Session</h3>
                     <p>Upload a patient scanpath on the left to generate a diagnostic report.</p>
                 </div>
 
                 <!-- Report UI -->
                 <div class="report-ui" id="reportUi">
-                    
+
                     <div class="report-header" id="reportHeader">
-                        <svg class="report-icon asd-icon" id="asdIcon" style="display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        <svg class="report-icon td-icon" id="tdIcon" style="display:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <svg class="report-icon asd-icon" id="asdIcon" style="display:none;" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                            </path>
+                        </svg>
+                        <svg class="report-icon td-icon" id="tdIcon" style="display:none;" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
                         <div>
                             <h3 class="report-title" id="resultDiagnosis">Diagnosis</h3>
                             <p class="report-subtitle" id="resultSubtext">Automated screening complete</p>
@@ -658,8 +709,10 @@
                             </tr>
                             <tr>
                                 <td>Clinical Disclaimer</td>
-                                <td style="font-size:0.75rem; color:var(--text-muted); font-weight:400; text-align:right; line-height:1.4;">
-                                    This automated analysis is intended as a supplementary screening tool. Final clinical diagnosis must be determined by a healthcare professional.
+                                <td
+                                    style="font-size:0.75rem; color:var(--text-muted); font-weight:400; text-align:right; line-height:1.4;">
+                                    This automated analysis is intended as a supplementary screening tool. Final
+                                    clinical diagnosis must be determined by a healthcare professional.
                                 </td>
                             </tr>
                         </tbody>
@@ -678,7 +731,7 @@
         const fileDisplay = document.getElementById('fileDisplay');
         const fileNameText = document.getElementById('fileNameText');
         const form = document.getElementById('predictionForm');
-        
+
         // File Drag & Drop logic
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             uploadArea.addEventListener(eventName, preventDefaults, false);
@@ -705,8 +758,12 @@
         fileInput.addEventListener('change', updateFileName);
 
         function updateFileName() {
-            if(fileInput.files.length > 0) {
-                fileNameText.textContent = fileInput.files[0].name;
+            if (fileInput.files.length > 0) {
+                if (fileInput.files.length === 1) {
+                    fileNameText.textContent = fileInput.files[0].name;
+                } else {
+                    fileNameText.textContent = fileInput.files.length + ' scanpath images selected for TTA';
+                }
                 fileDisplay.style.display = 'flex';
                 uploadArea.querySelector('.upload-icon').style.display = 'none';
                 uploadArea.querySelector('.upload-title').style.display = 'none';
@@ -720,7 +777,7 @@
             const modelSelect = document.getElementById('model').value;
             const demoSection = document.getElementById('demographicsSection');
             const ageInput = document.getElementById('age');
-            
+
             if (modelSelect.includes('multimodal') || modelSelect.includes('trimodel')) {
                 demoSection.style.display = 'grid';
                 ageInput.required = true;
@@ -735,14 +792,14 @@
             document.getElementById('reportUi').style.display = 'none';
             document.getElementById('emptyState').style.display = 'flex';
             form.reset();
-            
+
             // Reset upload area UI
             fileDisplay.style.display = 'none';
             uploadArea.querySelector('.upload-icon').style.display = 'block';
             uploadArea.querySelector('.upload-title').style.display = 'block';
             uploadArea.querySelector('.upload-subtitle').style.display = 'block';
             uploadArea.style.padding = '3rem 2rem';
-            
+
             toggleDemographics();
             document.getElementById('confidenceFill').style.width = '0%';
         }
@@ -750,7 +807,7 @@
         // Submission Logic
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const loadingPane = document.getElementById('loadingPane');
             const reportUi = document.getElementById('reportUi');
             const emptyState = document.getElementById('emptyState');
@@ -761,21 +818,18 @@
             }
 
             const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-            
-            const selectedModel = document.getElementById('model').value;
-            formData.append('model', selectedModel);
-            
-            if (selectedModel.includes('multimodal') || selectedModel.includes('trimodel')) {
-                formData.append('age', document.getElementById('age').value);
-                formData.append('gender', document.getElementById('gender').value);
+            for (let i = 0; i < fileInput.files.length; i++) {
+                formData.append('files', fileInput.files[i]);
             }
+
+            formData.append('age', document.getElementById('age').value);
+            formData.append('gender', document.getElementById('gender').value);
 
             loadingPane.style.display = 'flex';
 
             try {
                 // UX latency simulation for local dev
-                await new Promise(r => setTimeout(r, 600)); 
+                await new Promise(r => setTimeout(r, 600));
 
                 const response = await fetch('/predict', {
                     method: 'POST',
@@ -792,22 +846,22 @@
                 reportUi.style.display = 'flex';
 
                 const isASD = data.diagnosis.includes('ASD') && !data.diagnosis.includes('Non-ASD');
-                
+
                 const header = document.getElementById('reportHeader');
                 header.className = 'report-header ' + (isASD ? 'asd' : 'td');
-                
+
                 document.getElementById('asdIcon').style.display = isASD ? 'block' : 'none';
                 document.getElementById('tdIcon').style.display = isASD ? 'none' : 'block';
 
                 document.getElementById('resultDiagnosis').textContent = data.diagnosis;
                 document.getElementById('resultSubtext').textContent = isASD ? 'Positive clinical indicator for ASD traits.' : 'Typical development traits identified.';
-                
-                document.getElementById('resultModel').textContent = data.model || selectedModel;
+
+                document.getElementById('resultModel').textContent = 'Proposed Multimodal + TTA';
                 document.getElementById('resultConfidence').textContent = parseFloat(data.confidence).toFixed(2) + '%';
-                
+
                 const date = new Date();
                 document.getElementById('resultTimestamp').textContent = `REQ-${date.getTime().toString().slice(-6)}`;
-                
+
                 // Animate progress bar
                 setTimeout(() => {
                     document.getElementById('confidenceFill').style.width = data.confidence + '%';
@@ -825,7 +879,7 @@
             try {
                 const response = await fetch('/history');
                 const history = await response.json();
-                if(history.length === 0) {
+                if (history.length === 0) {
                     alert('No clinical history found.');
                     return;
                 }
@@ -837,4 +891,5 @@
         });
     </script>
 </body>
+
 </html>
